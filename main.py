@@ -5,7 +5,7 @@ from decimal import *
 from datetime import datetime
 import config
 import sys
-import logging as log
+import logging
 import time
 import argparse
 
@@ -22,9 +22,9 @@ def testRpc(rpc, name):
     try:
         rpc.getbestblockhash()
     except ConnectionRefusedError as e:
-        log.crit("%s RPC connection refused: %s" % (name, e))
+        logging.critical("%s RPC connection refused: %s" % (name, e))
     except JSONRPCException as e:
-        log.crit("%s RPC error: %s" % (name, e))
+        logging.critical("%s RPC error: %s" % (name, e))
 
 # checkMinimumProfit returns False if minimum user's profit conditions are not met
 def checkMinimumProfit(cfg, template):
@@ -53,9 +53,9 @@ def findCompetingAnchors(cfg, rpc, myFeeRate, alreadyChecked, repeatingChecks):
         if txid in alreadyChecked:
             continue
         if not "vsize" in txInfo:
-            log.crit("incompatible BTC RPC version (getrawmempool.vsize field not found)")
+            logging.critical("incompatible BTC RPC version (getrawmempool.vsize field not found)")
         if not "fees" in txInfo:
-            log.crit("incompatible BTC RPC version (getrawmempool.fees field not found)")
+            logging.critical("incompatible BTC RPC version (getrawmempool.fees field not found)")
         alreadyChecked[txid] = True
         # check competing conditions. check it first because it's cheap
         feeRate = int((txInfo["fees"]["base"] * 100000000 * 1000) / Decimal(txInfo["vsize"]))/Decimal(100000000)
@@ -104,7 +104,7 @@ def anchor(cfg, checkProfit, checkCompeting, createAnchor, sendAnchor):
         log.info("checking competing anchors in BTC mempool")
         competingTxs = findCompetingAnchors(cfg.DFI.Anchoring, btc, feeRate, {}, 3)
         if competingTxs:
-            log.crit("competing anchors present in mempool: %s" % competingTxs)
+            logging.critical("competing anchors present in mempool: %s" % competingTxs)
         log.success("ok\n")
     else:
         log.warning("skip checking competing anchors in BTC mempool\n")
@@ -119,7 +119,7 @@ def anchor(cfg, checkProfit, checkCompeting, createAnchor, sendAnchor):
         log.info("checking minimum profit conditions")
         err = checkMinimumProfit(cfg.DFI.Anchoring.Profit, template)
         if err:
-            log.crit("Minimum profit conditions not met: %s" % err)
+            logging.critical("Minimum profit conditions not met: %s" % err)
         log.success("ok\n")
     else:
         log.warning("skip checking minimum profit conditions\n")
@@ -133,13 +133,13 @@ def anchor(cfg, checkProfit, checkCompeting, createAnchor, sendAnchor):
         outsLen = len(btc.decoderawtransaction(template["txHex"])["vout"])
         fundedTx = btc.fundrawtransaction(template["txHex"], {"feeRate": feeRate, "changePosition": outsLen})
     except Exception as e:
-        log.crit("failed to fund transaction: %s" % e)
+        logging.critical("failed to fund transaction: %s" % e)
     try:
         signedTx = btc.signrawtransactionwithwallet(fundedTx["hex"])
         if signedTx["complete"] == False:
             raise Exception("not all addresses are known")
     except Exception as e:
-        log.crit("failed to sign transaction: %s" % e)
+        logging.critical("failed to sign transaction: %s" % e)
     log.success("ok\n")
 
     if not sendAnchor:

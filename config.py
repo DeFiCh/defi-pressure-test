@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import logging as log
+import logging
 import toml
 
 def must(ok, err):
