@@ -1,0 +1,16 @@
+
+#### DFI RPC credentials
+[DFI.RPC]
+Hostname = "localhost"
+Port = 18554
+User = "test"
+Password = "test"
+
+[DFI.ACCOUNT]
+PRIVKEY = "XXX"
+
+#### Enabled transactions
+[TXN.TYPE]
+UTXO = true
+ACC_TO_ACC = true
+POOL_SWAP = true
