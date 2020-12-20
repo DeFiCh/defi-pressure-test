@@ -20,7 +20,8 @@ def openRpc(cfg, walletName):
 # testRpc exits if RPC fails
 def testRpc(rpc, name):
     try:
-        rpc.getbestblockhash()
+        reply = rpc.getbestblockhash()
+        print('getbestblockhash result '+ reply)
     except ConnectionRefusedError as e:
         logging.critical("%s RPC connection refused: %s" % (name, e))
     except JSONRPCException as e:
@@ -154,12 +155,45 @@ def anchor(cfg, checkProfit, checkCompeting, createAnchor, sendAnchor):
     log.info("* potential reward      : %s DFI" % template["estimatedReward"])
     log.success("ok\n")
 
-def testTransferToken(cfg):
+def testTransferToken(cfg, dfiRpc):
+    if cfg.TXN.TYPE.UTXO:
+        reply = dfiRpc.sendtoaddress(cfg.TXN.ADDR.toAddr, 0.1)
+        logging.info("sendtoaddress repy: " + reply)
+
+def testUtxosToAccounts(cfg, dfiRpc):
+    if cfg.TXN.TYPE.UTXO_TO_ACC:
+        logging.info('Start to test utxostoaccount')
+        input = dict()
+        input[cfg.TXN.ADDR.fromAddr] = '0.1@DFI'
+        reply = dfiRpc.utxostoaccount(input)
+        logging.info('utxostoaccount reply: ' + reply)
+
+def testAccountToUtxos(cfg, dfiRpc):
+    if cfg.TXN.TYPE.ACC_TO_UTXO:
+        logging.info('Start to test accounttoutxos')
+        toObj = dict()
+        toObj[cfg.TXN.ADDR.toAddr] = '0.1@DFI'
+        reply = dfiRpc.accounttoutxos(cfg.TXN.ADDR.fromAddr, toObj)
+        logging.info('accounttoutxos reply: ' + reply)
+
+def testAccountToAccount(cfg, dfiRpc):
+    if cfg.TXN.TYPE.ACC_TO_UTXO:
+        logging.info('Start to test accounttoaccount')
+        toObj = dict()
+        toObj[cfg.TXN.ADDR.toAddr] = '0.1@MyToken3#131'
+        reply = dfiRpc.accounttoaccount(cfg.TXN.ADDR.fromAddr, toObj)
+        logging.info('accounttoaccount reply: ' + reply)
+
+def testDefiChain(cfg):
     # Open RPC connections
-    dfi = openRpc(cfg.DFI.RPC, None)
+    dfiRpc = openRpc(cfg.DFI.RPC, None)
 
     # Check RPC connection
-    testRpc(dfi, "DeFi")
+    testRpc(dfiRpc, "DeFi")
+    testTransferToken(cfg, dfiRpc)
+    testUtxosToAccounts(cfg, dfiRpc)
+    testAccountToUtxos(cfg, dfiRpc)
+    testAccountToAccount(cfg, dfiRpc)
 
 
 if __name__ == '__main__':
@@ -179,6 +213,8 @@ if __name__ == '__main__':
                         help='run the script within infinite loop every T seconds. if 0, then run only once (default: 0)')
     args = parser.parse_args()
 
+    logging.basicConfig(level=logging.INFO)
+
     # Read config
     cfg = config.mustLoad(args.config)
 
@@ -186,17 +222,17 @@ if __name__ == '__main__':
     while True:
         exitCode = 1
         try:
-            testTransferToken(cfg)
+            testDefiChain(cfg)
             exitCode = 0
         except ConnectionRefusedError as e:
-            log.error("RPC connection refused: %s" % e)
+            logging.error("RPC connection refused: %s" % e)
         except JSONRPCException as e:
-            log.error("RPC error: %s" % e)
+            logging.error("RPC error: %s" % e)
         except Exception as e:
-            log.error("Error: %s" % e)
+            logging.error("Error: %s" % e)
 
         if args.repeat == 0:
             sys.exit(exitCode)
         time.sleep(args.repeat)
-        log.info("\n%s repeating the routine" % datetime.now())
-        log.info("================================================\n")
+        logging.info("\n%s repeating the routine" % datetime.now())
+        logging.info("================================================\n")

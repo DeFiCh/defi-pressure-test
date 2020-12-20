@@ -2,15 +2,21 @@
 #### DFI RPC credentials
 [DFI.RPC]
 Hostname = "localhost"
-Port = 8554
-User = "rpcuser"
-Password = "rpcpass"
+Port = 19554
+User = "test"
+Password = "test"
 
 [DFI.ACCOUNT]
 PRIVKEY = "XXX"
 
+[TXN.ADDR]
+fromAddr = "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy"
+toAddr = "mnyRQwXpsAPDmrzrLdqfxZuc1v5e5HQt4d"
+
 #### Enabled transactions
 [TXN.TYPE]
 UTXO = true
+UTXO_TO_ACC = true
+ACC_TO_UTXO = true
 ACC_TO_ACC = true
 POOL_SWAP = true
