@@ -177,12 +177,26 @@ def testAccountToUtxos(cfg, dfiRpc):
         logging.info('accounttoutxos reply: ' + reply)
 
 def testAccountToAccount(cfg, dfiRpc):
-    if cfg.TXN.TYPE.ACC_TO_UTXO:
+    if cfg.TXN.TYPE.ACC_TO_ACC:
         logging.info('Start to test accounttoaccount')
         toObj = dict()
         toObj[cfg.TXN.ADDR.toAddr] = '0.1@MyToken3#131'
         reply = dfiRpc.accounttoaccount(cfg.TXN.ADDR.fromAddr, toObj)
         logging.info('accounttoaccount reply: ' + reply)
+
+def testPoolSwap(cfg, dfiRpc):
+    if cfg.TXN.TYPE.POOL_SWAP:
+        logging.info('Start to test poolswap')
+        metaData = dict()
+        metaData['from'] = cfg.TXN.ADDR.fromAddr
+        metaData['tokenFrom'] = cfg.TXN.ADDR.tokenFrom
+        metaData['amountFrom'] = 10
+        metaData['to'] = cfg.TXN.ADDR.toAddr
+        metaData['tokenTo'] = cfg.TXN.ADDR.tokenTo
+        metaData['maxPrice'] = 100
+        reply = dfiRpc.poolswap(metaData)
+        logging.info('poolswap reply: ' + reply)
+
 
 def testDefiChain(cfg):
     # Open RPC connections
@@ -194,6 +208,7 @@ def testDefiChain(cfg):
     testUtxosToAccounts(cfg, dfiRpc)
     testAccountToUtxos(cfg, dfiRpc)
     testAccountToAccount(cfg, dfiRpc)
+    testPoolSwap(cfg, dfiRpc)
 
 
 if __name__ == '__main__':

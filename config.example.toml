@@ -12,6 +12,8 @@ PRIVKEY = "XXX"
 [TXN.ADDR]
 fromAddr = "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy"
 toAddr = "mnyRQwXpsAPDmrzrLdqfxZuc1v5e5HQt4d"
+tokenFrom = "MyToken2#130" # Used for poolswap
+tokenTo = "MyToken3#131"
 
 #### Enabled transactions
 [TXN.TYPE]
