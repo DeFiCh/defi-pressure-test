@@ -5,20 +5,24 @@ Hostname = "localhost"
 Port = 19554
 User = "test"
 Password = "test"
+REGTEST = true
 
 [DFI.ACCOUNT]
 PRIVKEY = "XXX"
 
 [TXN.ADDR]
-fromAddr = "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy"
-toAddr = "mnyRQwXpsAPDmrzrLdqfxZuc1v5e5HQt4d"
+addrFrom = "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy"
+addrTo = "mtANLcCqttm6gGiDG3fYS1ULW16qRFLChx"
 tokenFrom = "MyToken2#130" # Used for poolswap
-tokenTo = "MyToken3#131"
+tokenTo = "MyToken3#129"
+poolpair = "LP130112"
 
 #### Enabled transactions
 [TXN.TYPE]
 UTXO = true
+MINT_TOKEN = true
 UTXO_TO_ACC = true
 ACC_TO_UTXO = true
 ACC_TO_ACC = true
+ADD_LIQUIDITY = true
 POOL_SWAP = true
