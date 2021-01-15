@@ -7,9 +7,7 @@ User = "test"
 Password = "test"
 REGTEST = false
 
-[DFI.ACCOUNT]
-PRIVKEY = "XXX"
-
+#### Address and tokens for test
 [TXN.ADDR]
 addrFrom = "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy"
 addrTo = "mnyRQwXpsAPDmrzrLdqfxZuc1v5e5HQt4d"
