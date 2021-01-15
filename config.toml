@@ -1,7 +1,7 @@
 
 #### DFI RPC credentials
 [DFI.RPC]
-Hostname = "localhost"
+Hostname = "0.0.0.0"
 Port = 19554
 User = "test"
 Password = "test"

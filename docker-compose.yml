@@ -1,0 +1,6 @@
+version: '3.7'
+services:
+  main:
+    build: .
+    restart: on-failure
+    command: python3 ./main.py --config=./config.toml --repeat=5
