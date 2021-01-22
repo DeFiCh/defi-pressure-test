@@ -64,13 +64,25 @@ def testAccountToAccount(cfg, dfiRpc):
         reply = dfiRpc.accounttoaccount(cfg.TXN.ADDR.addrFrom, toObj)
         logging.info('accounttoaccount reply: ' + reply)
 
+def getpoolprice(cfg, dfiRpc):
+    logging.info('Start to get pool price')
+    reply = dfiRpc.getpoolpair(cfg.TXN.ADDR.poolpair, True) # True means verbose
+    print(str(reply))
+    values = list(reply.values())
+    price = values[0]['reserveA/reserveB']
+    print('reserveA/reserveB price: ' + str(price))
+    return price
+
 def testAddLiquidity(cfg, dfiRpc):
     if cfg.TXN.TYPE.ADD_LIQUIDITY:
+        price = getpoolprice(cfg, dfiRpc)
         logging.info('Start to test addpoolliquidity')
         metaData = dict()
         tokens = list()
-        tokens.append("10@" + cfg.TXN.ADDR.tokenFrom)
-        tokens.append("10@" + cfg.TXN.ADDR.tokenTo)
+        tokenA = 10 * price
+        tokenB = 10
+        tokens.append(str(tokenA) + "@" + cfg.TXN.ADDR.tokenFrom)
+        tokens.append(str(tokenB) + "@" + cfg.TXN.ADDR.tokenTo)
         metaData[cfg.TXN.ADDR.addrFrom] = tokens
         reply = dfiRpc.addpoolliquidity(metaData, cfg.TXN.ADDR.addrFrom)
         logging.info('addpoolliquidity reply: ' + reply)
@@ -86,9 +98,10 @@ def testPoolSwap(cfg, dfiRpc, testTime):
             metaData['to'] = cfg.TXN.ADDR.addrTo
             metaData['tokenTo'] = cfg.TXN.ADDR.tokenTo
         else:
+            price = getpoolprice(cfg, dfiRpc)
             metaData['from'] = cfg.TXN.ADDR.addrTo
             metaData['tokenFrom'] = cfg.TXN.ADDR.tokenTo
-            metaData['amountFrom'] = 1
+            metaData['amountFrom'] = price
             metaData['to'] = cfg.TXN.ADDR.addrFrom
             metaData['tokenTo'] = cfg.TXN.ADDR.tokenFrom
         metaData['maxPrice'] = 100
@@ -112,6 +125,7 @@ def testDefiChain(cfg, testTime):
     testUtxosToAccounts(cfg, dfiRpc)
     testAccountToUtxos(cfg, dfiRpc)
     testAccountToAccount(cfg, dfiRpc)
+    getpoolprice(cfg, dfiRpc)
     testAddLiquidity(cfg, dfiRpc)
     testPoolSwap(cfg, dfiRpc, testTime)
     genBlock(cfg, dfiRpc)
