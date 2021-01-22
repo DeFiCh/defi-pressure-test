@@ -2,25 +2,25 @@
 #### DFI RPC credentials
 [DFI.RPC]
 Hostname = "0.0.0.0"
-Port = 19554
+Port = 18554
 User = "test"
 Password = "test"
-REGTEST = true
+REGTEST = false
 
 #### Address and tokens for test
 [TXN.ADDR]
-addrFrom = "mswsMVsyGMj1FzDMbbxw2QW3KvQAv2FKiy"
-addrTo = "mtANLcCqttm6gGiDG3fYS1ULW16qRFLChx"
-tokenFrom = "MyToken2#130" # Used for poolswap
-tokenTo = "MyToken3#129"
-poolpair = "LP130112"
+addrFrom = "7Jw72Q9yGJ1UWCXdQcUwkwSX48mkvdV2sS"
+addrTo = "7Jw72Q9yGJ1UWCXdQcUwkwSX48mkvdV2sS"
+tokenFrom = "DFI" # Used for poolswap
+tokenTo = "MOCK"
+poolpair = "MOCK-DFI"
 
 #### Enabled transactions
 [TXN.TYPE]
 UTXO = true
-MINT_TOKEN = true
+MINT_TOKEN = false
 UTXO_TO_ACC = true
 ACC_TO_UTXO = true
 ACC_TO_ACC = true
-ADD_LIQUIDITY = true
+ADD_LIQUIDITY = false
 POOL_SWAP = true

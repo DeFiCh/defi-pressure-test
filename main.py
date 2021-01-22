@@ -79,8 +79,8 @@ def testAddLiquidity(cfg, dfiRpc):
         logging.info('Start to test addpoolliquidity')
         metaData = dict()
         tokens = list()
-        tokenA = 10 * price
-        tokenB = 10
+        tokenB = 1
+        tokenA = tokenB * price
         tokens.append(str(tokenA) + "@" + cfg.TXN.ADDR.tokenFrom)
         tokens.append(str(tokenB) + "@" + cfg.TXN.ADDR.tokenTo)
         metaData[cfg.TXN.ADDR.addrFrom] = tokens
@@ -106,6 +106,7 @@ def testPoolSwap(cfg, dfiRpc, testTime):
             metaData['tokenTo'] = cfg.TXN.ADDR.tokenFrom
         metaData['maxPrice'] = 100
         reply = dfiRpc.poolswap(metaData)
+        logging.info('poolswap meta data: ' + str(metaData))
         logging.info('poolswap reply: ' + reply)
 
 def genBlock(cfg, dfiRpc):
@@ -139,7 +140,7 @@ if __name__ == '__main__':
                         help='run the script within infinite loop every T seconds. if 0, then run only once (default: 0)')
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(filename='test.log', level=logging.INFO)
 
     # Read config
     cfg = config.mustLoad(args.config)
